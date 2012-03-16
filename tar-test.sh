@@ -1,6 +1,6 @@
 #!/bin/bash
 # number of test* functions to try
-num_fxns=5
+num_fxns=6
 test_log=/tmp/tar-tests/tar-test.log
 
 ## Various methods to try and bypass the weird bash issue
@@ -32,7 +32,10 @@ fxn5() {
 	$EVAL tar $TAR_PARMS $strip_components --wildcards --overwrite -xzf "$FOUND_APP_ARCHIVE" "$app_extract_dir" 1>&2 2>> $test_log
 	export result=$?
 }
-
+fxn6() {
+	tar $TAR_PARMS $strip_components --wildcards --overwrite -xzf "$FOUND_APP_ARCHIVE" ${APP_EXTRACT_DIR:+"$APP_EXTRACT_DIR"} 1>&2 2>> $test_log
+	export result=$?
+}
 ## Test various ways to extract
 run_tests() {
 	n=$1
