@@ -1,6 +1,6 @@
 #!/bin/bash
 # number of test* functions to try
-num_fxns=3
+num_fxns=5
 test_log=/tmp/tar-tests/tar-test.log
 
 ## Various methods to try and bypass the weird bash issue
@@ -15,6 +15,21 @@ fxn2() {
 fxn3() {
 	[ -n "$APP_EXTRACT_DIR" ] && local app_extract_dir=$(echo -n "\"${APP_EXTRACT_DIR}\"")
 	tar $TAR_PARMS $strip_components --wildcards --overwrite -xzf "$FOUND_APP_ARCHIVE" $app_extract_dir 1>&2 2>> $test_log
+	export result=$?
+}
+fxn4() {
+	local app_extract_dir="$(echo "$APP_EXTRACT_DIR" | sed -e 's| |\\ |g')"
+	local need_to_eval=$(echo "$APP_EXTRACT_DIR" | grep -c '\\')
+	[ "$need_to_eval" != '0' ] && local EVAL='eval'
+	$EVAL tar $TAR_PARMS $strip_components --wildcards --overwrite -xzf "$FOUND_APP_ARCHIVE" $app_extract_dir 1>&2 2>> $test_log
+	export result=$?
+}
+
+fxn5() {
+	local app_extract_dir="$(echo "$APP_EXTRACT_DIR" | sed -e 's| |\\ |g')"
+	local need_to_eval=$(echo "$APP_EXTRACT_DIR" | grep -c '\\')
+	[ "$need_to_eval" != '0' ] && local EVAL='eval'
+	$EVAL tar $TAR_PARMS $strip_components --wildcards --overwrite -xzf "$FOUND_APP_ARCHIVE" "$app_extract_dir" 1>&2 2>> $test_log
 	export result=$?
 }
 
