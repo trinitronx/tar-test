@@ -8,8 +8,8 @@ set_strip_components() {
 	if [ -z "${APP_EXTRACT_DIR}" ]; then
 		strip_components="--strip-components=0"
 	else
-		local dirs_to_strip=( $(echo "$APP_EXTRACT_DIR" | tr '/' '\n' ) )
-		strip_components="--strip-components=${#dirs_to_strip[*]}"
+		local dirs_to_strip=$(echo "$APP_EXTRACT_DIR" | tr '/' '\n' | wc -l)
+		strip_components="--strip-components=${dirs_to_strip}"
 	fi
 }
 
